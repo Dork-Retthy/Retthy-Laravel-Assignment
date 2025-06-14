@@ -21,7 +21,7 @@ Route::prefix('books')->group(function () {
     Route::get('/count', [BookController::class, 'countBooks']);
     Route::post('/create', [BookController::class, 'createBook']);
     Route::put('/edit/{id}', [BookController::class, 'edit']);
-    Route::delete('/delete/{id}', [BookController::class, 'destroy']);
+    Route::delete('/delete/{id}', [BookController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

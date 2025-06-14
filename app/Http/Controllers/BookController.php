@@ -12,7 +12,14 @@ class BookController extends Controller
         ['id'=> 2, 'title'=> 'book 02', 'author'=> 'author 02', 'year'=> 2005],
         ['id'=> 3, 'title'=> 'book 03', 'author'=> 'author 03', 'year'=> 2010],
     ];
-
+    public function delete(int $id){
+        return response()->json([
+            "message" => "Book with id $id deleted successfully",
+            "data" => [
+                "id" => $id
+            ]
+        ], 200);
+    }
     
 
     public function edit(Request $request, int $id){

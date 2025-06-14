@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
     public $books = [
-        ['id'=> 1, 'title'=> 'book 01', 'author'=> 'author 01', 'year'=> 2001],
-        ['id'=> 2, 'title'=> 'book 02', 'author'=> 'author 02', 'year'=> 2005],
-        ['id'=> 3, 'title'=> 'book 03', 'author'=> 'author 03', 'year'=> 2010],
+        ['id'=> 1, 'title'=> 'book 01', 'author'=> 'author 01', 'isbn'=> 'ISBN-0001', 'publicationYear'=> 2001, 'genre'=> 'Science', 'availableCopies'=> 5],
+        ['id'=> 2, 'title'=> 'book 02', 'author'=> 'author 02', 'isbn'=> 'ISBN-0002', 'publicationYear'=> 2005, 'genre'=> 'genre 02', 'availableCopies'=> 3],
+        ['id'=> 3, 'title'=> 'book 03', 'author'=> 'author 03', 'isbn'=> 'ISBN-0003', 'publicationYear'=> 2010, 'genre'=> 'genre 03', 'availableCopies'=> 0],
     ];
     public function delete(int $id){
         return response()->json([
@@ -28,7 +28,10 @@ class BookController extends Controller
             "data" => [
                 "title" => $request->title,
                 "author" => $request->author,
-                "year" => $request->year
+                "ibsn" => $request->isbn,
+                "publicationYear" => $request->publicationYear,
+                "genre" => $request->genre,
+                "availableCopies" => $request->availableCopies
             ]
             ], 200);
     }
@@ -39,17 +42,21 @@ class BookController extends Controller
             "data" => [
                 'title' => $request->title,
                 "author" => $request->author,
-                "year" => $request->year
+                "isbn" => $request->isbn,
+                "publicationYear" => $request->publicationYear,
+                "genre" => $request->genre,
+                "availableCopies" => $request->availableCopies
             ]
         ], 201);
     }
     public function index() {
-        $book = new BookModel();
         return response()->json([
             'message' => 'request successfully!',
-            //data normally get from model that query from db
-            'data' => $book::all(),
+            'data' => $this->books
         ], 200);
+        return response()->json([
+            'message' => 'No books found',
+        ], 204);
     }
 
 

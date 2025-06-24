@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BookModel;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreBookRequest;
+use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
@@ -35,20 +37,31 @@ class BookController extends Controller
             ]
             ], 200);
     }
+    ///Create a new book
+    // public function createBook(Request $request) {
+    //     return response() -> json([
+    //         "message" => "Successful",
+    //         "data" => [
+    //             'title' => $request->title,
+    //             "author" => $request->author,
+    //             "isbn" => $request->isbn,
+    //             "publicationYear" => $request->publicationYear,
+    //             "genre" => $request->genre,
+    //             "availableCopies" => $request->availableCopies
+    //         ]
+    //     ], 201);
+    // }
 
-    public function createBook(Request $request) {
-        return response() -> json([
-            "message" => "Successful",
-            "data" => [
-                'title' => $request->title,
-                "author" => $request->author,
-                "isbn" => $request->isbn,
-                "publicationYear" => $request->publicationYear,
-                "genre" => $request->genre,
-                "availableCopies" => $request->availableCopies
-            ]
+    public function createBook(StoreBookRequest $request) {
+        $book = BookModel::create($request->all());
+        return response()->json([
+            'message' => 'Book created successfully!',
+            'data' => $book,
         ], 201);
     }
+
+
+
     public function index() {
         return response()->json([
             'message' => 'request successfully!',

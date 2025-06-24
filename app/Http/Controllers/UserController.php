@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserModel;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreUserRequest;
+use Illuminate\Support\Facades\Validator;
+
 
 class UserController extends Controller
 {
@@ -30,14 +34,24 @@ class UserController extends Controller
             ], 404);
         }
     }
-    public function createUser(Request $request) {
-        return response() -> json([
-            "message" => "Successful",
-            "data" => [
-                "name" => $request->name,
-                "email" => $request->email,
-                "membershipDate" => $request->membershipDate
-            ]
+
+    ///Create user
+    // public function createUser(Request $request) {
+    //     return response() -> json([
+    //         "message" => "Successful",
+    //         "data" => [
+    //             "name" => $request->name,
+    //             "email" => $request->email,
+    //             "membershipDate" => $request->membershipDate
+    //         ]
+    //     ], 201);
+    // }
+
+    public function createUser(StoreUserRequest $request){
+        $user = UserModel::create($request->all());
+        return response()->json([
+            "message" => "User created successfully!",
+            "data" => $user,
         ], 201);
     }
 

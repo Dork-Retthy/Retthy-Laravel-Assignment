@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class StoreAuthorRequest extends FormRequest
 {
@@ -11,7 +13,14 @@ class StoreAuthorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
+    }
+
+    public function failedValidation(Validator $validator){
+        throw new HttpResponseException(response()->json([
+            "success" => "faile",
+            "message" => $validator->errors(),
+        ], 201));
     }
 
     /**
@@ -22,7 +31,8 @@ class StoreAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'author' => 'required|string|max:255',
+            'body' => 'string',
         ];
     }
 }

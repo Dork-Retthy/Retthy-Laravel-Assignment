@@ -14,8 +14,5 @@ class BookModel extends Model
         'author',
         'publication_year',
         'genre',
-        'created_at',
-        'updated_at',
-        'body'
     ];
 }

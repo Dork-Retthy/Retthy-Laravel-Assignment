@@ -12,11 +12,6 @@ class UserModel extends Model
     protected $fillable = [
         'name',
         'email',
-        'email_verified_at',
         'password',
-        'remember_token',
-        'created_at',
-        'updated_at',
-        'body'
     ];
 }

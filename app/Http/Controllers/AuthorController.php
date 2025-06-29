@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAuthorRequest;
+use App\Models\AuthorModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AuthorController extends Controller
 {
@@ -41,6 +44,14 @@ class AuthorController extends Controller
             ]
         ], 201);
     }
+
+    // public function createAuthor(StoreAuthorRequest $request){
+    //     $author = AuthorModel::create($request->all());
+    //     return response()->json([
+    //         "message" => "Author created successfully!",
+    //         "data" => $author,
+    //     ], 201);
+    // }
 
     public function edit(Request $request, int $id){
         return response()-> json([

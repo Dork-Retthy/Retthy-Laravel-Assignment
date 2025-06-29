@@ -3,88 +3,94 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookModel;
+use App\Models\AuthorModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBookRequest;
-use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
-    public $books = [
-        ['id'=> 1, 'title'=> 'book 01', 'author'=> 'author 01', 'isbn'=> 'ISBN-0001', 'publicationYear'=> 2001, 'genre'=> 'Science', 'availableCopies'=> 5],
-        ['id'=> 2, 'title'=> 'book 02', 'author'=> 'author 02', 'isbn'=> 'ISBN-0002', 'publicationYear'=> 2005, 'genre'=> 'genre 02', 'availableCopies'=> 3],
-        ['id'=> 3, 'title'=> 'book 03', 'author'=> 'author 03', 'isbn'=> 'ISBN-0003', 'publicationYear'=> 2010, 'genre'=> 'genre 03', 'availableCopies'=> 0],
-    ];
-    public function delete(int $id){
+    /**
+     * List all books with their authors.
+     */
+    public function index()
+    {
+        // Get all books with their author relationship
+        $books = BookModel::with('author')->get();
+
         return response()->json([
-            "message" => "Book with id $id deleted successfully",
-            "data" => [
-                "id" => $id
-            ]
+            'message' => 'Request successful!',
+            'data' => $books
         ], 200);
     }
-    
 
-    public function edit(Request $request, int $id){
-        return response()-> json([
-            "id" => $id,
-            "data" => [
-                "title" => $request->title,
-                "author" => $request->author,
-                "ibsn" => $request->isbn,
-                "publicationYear" => $request->publicationYear,
-                "genre" => $request->genre,
-                "availableCopies" => $request->availableCopies
-            ]
-            ], 200);
-    }
-    ///Create a new book
-    // public function createBook(Request $request) {
-    //     return response() -> json([
-    //         "message" => "Successful",
-    //         "data" => [
-    //             'title' => $request->title,
-    //             "author" => $request->author,
-    //             "isbn" => $request->isbn,
-    //             "publicationYear" => $request->publicationYear,
-    //             "genre" => $request->genre,
-    //             "availableCopies" => $request->availableCopies
-    //         ]
-    //     ], 201);
-    // }
-
-    public function createBook(StoreBookRequest $request) {
+    /**
+     * Create a new book and show its author.
+     */
+    public function createBook(StoreBookRequest $request)
+    {
+        // Validate and create a new book with author_id
         $book = BookModel::create($request->all());
+        // Load the author relationship
+        $book->load('author');
+
         return response()->json([
             'message' => 'Book created successfully!',
             'data' => $book,
         ], 201);
     }
 
+    /**
+     * Show a book by ID, including the author's name.
+     */
+    public function show($id)
+    {
+        // Find the book with its author
+        $book = BookModel::with('author')->find($id);
 
-
-    public function index() {
-        return response()->json([
-            'message' => 'request successfully!',
-            'data' => $this->books
-        ], 200);
-        return response()->json([
-            'message' => 'No books found',
-        ], 204);
-    }
-
-
-    public function show(String $id){
-        foreach($this->books as $book){
-            if($book['id'] == $id){
-                return response()-> json([
-                    "message" => "successfully",
-                    "data" => $book
-                ], 200);
-            } 
+        if ($book) {
+            return response()->json([
+                "message" => "Successfully found book",
+                "data" => [
+                    "book" => $book,
+                    "author_name" => $book->author->name ?? null // Show author name
+                ]
+            ], 200);
         }
+
         return response()->json([
-            'message' => ""
-        ], 204);
+            'message' => "Book not found"
+        ], 404);
     }
-    
+
+    /**
+     * Edit a book (example, you can expand as needed).
+     */
+    public function edit(Request $request, int $id)
+    {
+        $book = BookModel::find($id);
+        if (!$book) {
+            return response()->json(['message' => 'Book not found'], 404);
+        }
+        $book->update($request->all());
+        $book->load('author');
+        return response()->json([
+            "message" => "Book updated successfully",
+            "data" => $book
+        ], 200);
+    }
+
+    /**
+     * Delete a book by ID.
+     */
+    public function delete(int $id)
+    {
+        $book = BookModel::find($id);
+        if (!$book) {
+            return response()->json(['message' => 'Book not found'], 404);
+        }
+        $book->delete();
+        return response()->json([
+            "message" => "Book with id $id deleted successfully"
+        ], 200);
+    }
 }
